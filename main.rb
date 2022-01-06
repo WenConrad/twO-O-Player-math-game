@@ -1,22 +1,35 @@
 require './player'
 require './question'
 
-puts "Welcome to the TwO-O-Player Math Game!"
-puts "Player 1 Name:"
-@p1 = Player.new(gets.chomp)
-puts "Player 2 Name:"
-@p2 = Player.new(gets.chomp)
-current_turn = @p1
-while true
-  if !Question.new(current_turn).prompt
-    current_turn.incorrect
+
+class Game
+  attr_accessor :current_turn
+  attr_reader :p1, :p2
+  
+  def initialize
+    puts "Welcome to the TwO-O-Player Math Game!"
+    puts "Player 1 Name:"
+    @p1 = Player.new(gets.chomp)
+    puts "Player 2 Name:"
+    @p2 = Player.new(gets.chomp)
+    @current_turn = @p1
   end
-  puts "->#{@p1.player_score} vs #{@p2.player_score}<-"
-  if @p1.score == 0 || @p2.score == 0
-    break
+  
+  def play
+    while true
+      if !Question.new(self.current_turn).prompt
+        self.current_turn.incorrect
+      end
+      puts "->#{self.p1.player_score} vs #{self.p2.player_score}<-"
+      if self.p1.score == 0 || self.p2.score == 0
+        break
+      end
+      self.current_turn = self.current_turn == self.p1 ? self.p2 : self.p1
+      puts "----- NEW TURN -----"
+    end
+    winner = self.p1.score > self.p2.score ? self.p1 : self.p2
+    puts "#{winner} wins with a score of #{winner.score}/3\n----- GAME OVER -----\nGood bye!"
   end
-  current_turn = current_turn == @p1 ? @p2 : @p1
-  puts "----- NEW TURN -----"
 end
-winner = @p1.score > @p2.score ? @p1 : @p2
-puts "#{winner} wins with a score of #{winner.score}/3\n----- GAME OVER -----\nGood bye!"
+
+Game.new.play
