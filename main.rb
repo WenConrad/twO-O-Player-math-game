@@ -1,7 +1,6 @@
 require './player'
 require './question'
 
-
 class Game
   attr_accessor :current_turn
   attr_reader :p1, :p2
@@ -15,6 +14,10 @@ class Game
     @current_turn = @p1
   end
   
+  def next_turn
+    self.current_turn = self.current_turn == self.p1 ? self.p2 : self.p1
+  end
+
   def play
     while true
       if !Question.new(self.current_turn).prompt
@@ -24,7 +27,7 @@ class Game
       if self.p1.score == 0 || self.p2.score == 0
         break
       end
-      self.current_turn = self.current_turn == self.p1 ? self.p2 : self.p1
+      self.next_turn
       puts "----- NEW TURN -----"
     end
     winner = self.p1.score > self.p2.score ? self.p1 : self.p2
