@@ -14,4 +14,8 @@ class Player
   def player_score
     "#{self.name}: #{self.score}/3"
   end
+
+  def to_s
+    self.name
+  end
 end
